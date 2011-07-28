@@ -19,7 +19,7 @@ License: GPLv2
 Group: Sound
 BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildRequires: libsndfile-devel
-BuildRequires: libxmms-devel
+#BuildRequires: libxmms-devel
 BuildRequires: libid3lib-devel
 BuildRequires: dos2unix
 BuildRequires: automake1.8
@@ -69,20 +69,20 @@ completely written from scratch. FAAD 2 is licensed under the GPL.
 This package contains the static libraries needed to build programs
 with libfaad.
 
-%package xmms
-Group: Sound
-Summary: AAC input plugin for xmms
-Requires: xmms
+#package xmms
+#Group: Sound
+#Summary: AAC input plugin for xmms
+#Requires: xmms
 
-%description xmms
-This is an AAC input plugin for xmms. AAC files are recognized by an
-.aac extension.
+#description xmms
+#This is an AAC input plugin for xmms. AAC files are recognized by an
+#.aac extension.
 
 %prep
 %setup -q
 dos2unix configure.in frontend/main.c common/mp4ff/mp4ffint.h common/mp4ff/Makefile.am
 %patch4 -p1 -b .fpic
-chmod 644 AUTHORS README TODO NEWS ChangeLog plugins/xmms/README
+chmod 644 AUTHORS README TODO NEWS ChangeLog
 export WANT_AUTOCONF_2_5=1
 aclocal-1.8 -I .
 autoheader
@@ -91,7 +91,7 @@ automake-1.8 -a -c
 autoconf
 
 %build
-%configure2_5x --with-xmms
+%configure2_5x
 %make
 
 %install
@@ -104,7 +104,7 @@ install -m 644 mp4ff.h mp4ff_int_types.h %{buildroot}%{_includedir}
 cd ../..
  
 #remove unneeded files
-rm -f %{buildroot}%{_libdir}/xmms/Input/*a
+# rm -f %{buildroot}%{_libdir}/xmms/Input/*a
 #clean libtool files
 
 #gw rename it to a more standard name
@@ -140,8 +140,8 @@ rm -rf %{buildroot}
 %{_libdir}/libfaad.a
 %{_libdir}/libmp4ff.a
 
-%files xmms
-%defattr(-,root,root)
-%doc plugins/xmms/README
-%{_libdir}/xmms/Input/libmp4.so
+#files xmms
+#defattr(-,root,root)
+#doc plugins/xmms/README
+#{_libdir}/xmms/Input/libmp4.so
 
