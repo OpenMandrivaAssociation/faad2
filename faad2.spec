@@ -15,7 +15,7 @@ Release: %{release}
 Source0: %{name}-%{version}.tar.bz2
 Patch4: faad2-2.7-mp4ff-fpic.patch
 URL:	 http://www.audiocoding.com
-License: GPLv2
+License: GPLv2+
 Group: Sound
 BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildRequires: libsndfile-devel
