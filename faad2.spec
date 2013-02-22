@@ -17,8 +17,7 @@ Patch4: faad2-2.7-mp4ff-fpic.patch
 URL:	 http://www.audiocoding.com
 License: GPLv2+
 Group: Sound
-BuildRoot: %{_tmppath}/%{name}-buildroot
-BuildRequires: libsndfile-devel
+BuildRequires: sndfile-devel
 #BuildRequires: libxmms-devel
 BuildRequires: libid3lib-devel
 BuildRequires: dos2unix
@@ -82,6 +81,7 @@ with libfaad.
 %setup -q
 dos2unix configure.in frontend/main.c common/mp4ff/mp4ffint.h common/mp4ff/Makefile.am
 %patch4 -p1 -b .fpic
+sed -i 's/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/g' configure.in
 chmod 644 AUTHORS README TODO NEWS ChangeLog
 export WANT_AUTOCONF_2_5=1
 aclocal-1.8 -I .
@@ -95,7 +95,6 @@ autoconf
 %make
 
 %install
-rm -rf %{buildroot}
 %makeinstall_std
 #manual installation of libmp4ff
 cd common/mp4ff
@@ -111,37 +110,18 @@ cd ../..
 mkdir -p %{buildroot}%{_mandir}/man1
 mv %{buildroot}%{_mandir}/manm/faad.man %{buildroot}%{_mandir}/man1/faad.1
 
-%clean
-rm -rf %{buildroot}
-
-%if %mdvver < 200900
-%post -n %libname -p /sbin/ldconfig
-%postun -n %libname -p /sbin/ldconfig
-%endif
-
 %files
-%defattr(-,root,root)
 %doc README NEWS TODO AUTHORS ChangeLog
 %{_bindir}/faad
 %{_mandir}/man1/faad.1*
 
 %files -n %libname
-%defattr(-,root,root)
 %{_libdir}/libfaad.so.%{major}*
 
 %files -n %develname
-%defattr(-,root,root)
 %{_libdir}/libfaad.so
-%{_libdir}/libfaad.la
 %{_includedir}/*
 
 %files -n %staticname
-%defattr(-,root,root)
 %{_libdir}/libfaad.a
 %{_libdir}/libmp4ff.a
-
-#files xmms
-#defattr(-,root,root)
-#doc plugins/xmms/README
-#{_libdir}/xmms/Input/libmp4.so
-
