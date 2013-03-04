@@ -1,0 +1,23 @@
+--- faad2-2.7/configure.in.bero	2013-03-04 02:16:37.026747231 +0100
++++ faad2-2.7/configure.in	2013-03-04 02:17:17.949681096 +0100
+@@ -7,9 +7,9 @@ dnl - faad
+ dnl - xmms input mp4/aac plugin
+ dnl - mpeg4ip plugin (requires mpeg4ip's libmp4v2 to be installed)
+ 
+-AC_INIT
++AC_INIT(faad2, 2.7.0)
+ AC_CONFIG_AUX_DIR(.)
+-AM_INIT_AUTOMAKE(faad2, 2.7.0)
++AM_INIT_AUTOMAKE
+ 
+ AC_PROG_LIBTOOL
+ AC_SUBST(LIBTOOL_DEPS)
+@@ -25,7 +25,7 @@ AC_PROG_LN_S
+ AC_PROG_MAKE_SET
+ AC_CHECK_PROGS(RPMBUILD, rpmbuild, rpm)
+ 
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS([config.h])
+ 
+ AC_ARG_WITH(xmms,[  --with-xmms             compile XMMS-1 plugin],
+ 	     WITHXMMS=$withval, WITHXMMS=no)

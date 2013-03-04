@@ -7,9 +7,10 @@
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
 Version:	2.7
-Release:	3
+Release:	4
 Source0:	%{name}-%{version}.tar.bz2
-Patch4:		faad2-2.7-mp4ff-fpic.patch
+Patch0:		faad2-automake-1.13.patch
+Patch1:		faad2-2.7-mp4ff-fpic.patch
 URL:		http://www.audiocoding.com
 License:	GPLv2+
 Group:		Sound
@@ -76,14 +77,12 @@ with libfaad.
 %prep
 %setup -q
 dos2unix configure.in frontend/main.c common/mp4ff/mp4ffint.h common/mp4ff/Makefile.am
-%patch4 -p1 -b .fpic
-sed -i 's/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/g' configure.in
+%apply_patches
 chmod 644 AUTHORS README TODO NEWS ChangeLog
-export WANT_AUTOCONF_2_5=1
-aclocal-1.8 -I .
+aclocal -I .
 autoheader
 libtoolize --automake --copy
-automake-1.8 -a -c
+automake -a -c
 autoconf
 
 %build
