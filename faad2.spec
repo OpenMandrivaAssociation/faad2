@@ -7,7 +7,7 @@
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
 Version:	2.7
-Release:	5
+Release:	6
 Source0:	%{name}-%{version}.tar.bz2
 Patch0:		faad2-automake-1.13.patch
 Patch1:		faad2-2.7-mp4ff-fpic.patch
