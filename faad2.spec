@@ -16,7 +16,7 @@ License:	GPLv2+
 Group:		Sound
 BuildRequires:	sndfile-devel
 #BuildRequires: libxmms-devel
-BuildRequires:	libid3lib-devel
+BuildRequires:	id3lib-devel
 BuildRequires:	dos2unix
 BuildRequires:	automake1.8
 BuildRequires:	pkgconfig(sdl)
