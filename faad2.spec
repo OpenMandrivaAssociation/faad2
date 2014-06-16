@@ -80,6 +80,7 @@ autoupdate
 autoreconf -fiv
 
 %build
+%global optflags %{optflags} -Ofast
 %configure2_5x	--enable-static \
 		--with-drm
 %make
