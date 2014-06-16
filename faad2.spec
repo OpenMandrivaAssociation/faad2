@@ -80,7 +80,8 @@ autoupdate
 autoreconf -fiv
 
 %build
-%configure2_5x	--enable-static
+%configure2_5x	--enable-static \
+		--with-drm
 %make
 
 %install
