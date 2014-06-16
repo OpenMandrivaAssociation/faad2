@@ -1,7 +1,10 @@
 %define	major	2
-%define	libname	%mklibname %{name}_ %{major}
-%define	devname	%mklibname -d %{name}
-%define	static	%mklibname -s -d %{name}
+%define libname	%mklibname faad %{major}
+%define boguslibname %mklibname %{name}_ %{major}
+%define develname %mklibname -d faad
+%define bogusdevelname %mklibname -d %{name}
+%define staticname %mklibname -s -d faad
+%define bogusstaticname %mklibname -s -d %{name}
 
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
@@ -27,6 +30,7 @@ completely written from scratch. FAAD 2 is licensed under the GPL.
 %package -n	%{libname}
 Summary:	Freeware Advanced Audio Decoder shared library
 Group:		System/Libraries
+Obsoletes:	%{boguslibname} < %{EVRD}
 
 %description -n	%{libname}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
@@ -40,6 +44,7 @@ Summary:	Freeware Advanced Audio Decoder development files
 Group:		Development/C++
 Requires:	%{libname} = %{EVRD}
 Obsoletes:	%mklibname -d %{name}_ 0
+Obsoletes:	%{bogusdevelname} < %{EVRD}
 
 %description -n %{devname}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
@@ -54,8 +59,9 @@ Group:		Development/C++
 Requires:	%{devname} = %{EVRD}
 Provides:	%{name}-static-devel  = %{EVRD}
 Obsoletes:	%mklibname -s -d %{name}_ 0
+Obsoletes:	%{bogusstaticname} < %{EVRD}
 
-%description -n %static
+%description -n %{static}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
 
