@@ -1,64 +1,61 @@
-
-%define major 2
-%define libname %mklibname %{name}_ %{major}
-%define develname %mklibname -d %{name}
-%define staticname %mklibname -s -d %{name}
+%define	major	2
+%define	libname	%mklibname %{name}_ %{major}
+%define	devname	%mklibname -d %{name}
+%define	static	%mklibname -s -d %{name}
 
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
 Version:	2.7
-Release:	4
+Release:	6
 Source0:	%{name}-%{version}.tar.bz2
 Patch0:		faad2-automake-1.13.patch
 Patch1:		faad2-2.7-mp4ff-fpic.patch
 URL:		http://www.audiocoding.com
 License:	GPLv2+
 Group:		Sound
-BuildRequires:	sndfile-devel
+BuildRequires:	pkgconfig(sndfile)
 #BuildRequires: libxmms-devel
-BuildRequires:	libid3lib-devel
+BuildRequires:	id3lib-devel
 BuildRequires:	dos2unix
-BuildRequires:	automake1.8
-BuildRequires:	SDL-devel
-Epoch:	1
+BuildRequires:	pkgconfig(sdl)
+Epoch:		1
 
 %description
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
 
-%package -n %{libname}
+%package -n	%{libname}
 Summary:	Freeware Advanced Audio Decoder shared library
-Group:	System/Libraries
+Group:		System/Libraries
 
-%description -n %{libname}
+%description -n	%{libname}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
 
 This package contains the shared library needed by programs linked to
 libfaad.
 
-%package -n %{develname}
+%package -n	%{devname}
 Summary:	Freeware Advanced Audio Decoder development files
 Group:		Development/C++
-Requires:	%{libname} = %{epoch}:%{version}
-Provides:	lib%{name}-devel  = %{epoch}:%{version}-%{release}
+Requires:	%{libname} = %{EVRD}
 Obsoletes:	%mklibname -d %{name}_ 0
 
-%description -n %{develname}
+%description -n %{devname}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
 
 This package contains the C++ headers needed to build programs with
 libfaad.
 
-%package -n %{staticname}
+%package -n	%{static}
 Summary:	Freeware Advanced Audio Decoder static libraries
 Group:		Development/C++
-Requires:	%{develname} = %{epoch}:%{version}
-Provides:	lib%{name}-static-devel  = %{epoch}:%{version}-%{release}
+Requires:	%{devname} = %{EVRD}
+Provides:	%{name}-static-devel  = %{EVRD}
 Obsoletes:	%mklibname -s -d %{name}_ 0
 
-%description -n %staticname
+%description -n %static
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
 
@@ -79,28 +76,18 @@ with libfaad.
 dos2unix configure.in frontend/main.c common/mp4ff/mp4ffint.h common/mp4ff/Makefile.am
 %apply_patches
 chmod 644 AUTHORS README TODO NEWS ChangeLog
-aclocal -I .
-autoheader
-libtoolize --automake --copy
-automake -a -c
-autoconf
+autoupdate
+autoreconf -fiv
 
 %build
-%configure2_5x
+%configure2_5x	--enable-static
 %make
 
 %install
 %makeinstall_std
-#manual installation of libmp4ff
-cd common/mp4ff
-install -m 644 libmp4ff.a %{buildroot}%{_libdir}
-install -m 644 mp4ff.h mp4ff_int_types.h %{buildroot}%{_includedir}
-cd ../..
+install -m644 common/mp4ff/libmp4ff.a %{buildroot}%{_libdir}
+install -m644 common/mp4ff/{mp4ff.h,mp4ff_int_types.h} %{buildroot}%{_includedir}
  
-#remove unneeded files
-# rm -f %{buildroot}%{_libdir}/xmms/Input/*a
-#clean libtool files
-
 #gw rename it to a more standard name
 mkdir -p %{buildroot}%{_mandir}/man1
 mv %{buildroot}%{_mandir}/manm/faad.man %{buildroot}%{_mandir}/man1/faad.1
@@ -110,13 +97,13 @@ mv %{buildroot}%{_mandir}/manm/faad.man %{buildroot}%{_mandir}/man1/faad.1
 %{_bindir}/faad
 %{_mandir}/man1/faad.1*
 
-%files -n %libname
+%files -n %{libname}
 %{_libdir}/libfaad.so.%{major}*
 
-%files -n %develname
+%files -n %{devname}
 %{_libdir}/libfaad.so
 %{_includedir}/*
 
-%files -n %staticname
+%files -n %{static}
 %{_libdir}/libfaad.a
 %{_libdir}/libmp4ff.a
