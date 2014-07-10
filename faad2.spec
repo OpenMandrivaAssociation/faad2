@@ -9,7 +9,7 @@
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
 Version:	2.7
-Release:	8
+Release:	9
 Source0:	%{name}-%{version}.tar.bz2
 Patch0:		faad2-automake-1.13.patch
 Patch1:		faad2-2.7-mp4ff-fpic.patch
@@ -43,6 +43,7 @@ libfaad.
 Summary:	Freeware Advanced Audio Decoder development files
 Group:		Development/C++
 Requires:	%{libname} = %{EVRD}
+Provides:	%{name}-devel = %{EVRD}
 Obsoletes:	%mklibname -d %{name}_ 0
 Obsoletes:	%{bogusdevname} < %{EVRD}
 
