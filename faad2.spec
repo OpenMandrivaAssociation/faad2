@@ -1,17 +1,18 @@
 %define	major	2
 %define	libname	%mklibname faad %{major}
 %define boguslibname %mklibname %{name}_ %{major}
+%define drmlibname %mklibname faad_drm %{major}
 %define	devname	%mklibname -d faad
 %define bogusdevname %mklibname -d %{name}
 %define	static	%mklibname -s -d faad
+%define drmstatic %mklibname -s -d faad_drm
 %define bogusstatic %mklibname -s -d %{name}
 
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
-Version:	2.7
-Release:	11
-Source0:	%{name}-%{version}.tar.bz2
-Patch0:		faad2-automake-1.13.patch
+Version:	2.8.8
+Release:	1
+Source0:	https://netcologne.dl.sourceforge.net/project/faac/faad2-src/faad2-2.8.0/faad2-%{version}.tar.gz
 Patch1:		faad2-2.7-mp4ff-fpic.patch
 URL:		http://www.audiocoding.com
 License:	GPLv2+
@@ -39,10 +40,24 @@ completely written from scratch. FAAD 2 is licensed under the GPL.
 This package contains the shared library needed by programs linked to
 libfaad.
 
+%package -n	%{drmlibname}
+Summary:	DRM support for the Freeware Advanced Audio Decoder shared library
+Group:		System/Libraries
+
+%description -n	%{drmlibname}
+FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
+completely written from scratch. FAAD 2 is licensed under the GPL.
+
+This package contains the shared library needed by programs linked to
+libfaad.
+
+This module adds DRM support.
+
 %package -n	%{devname}
 Summary:	Freeware Advanced Audio Decoder development files
 Group:		Development/C++
 Requires:	%{libname} = %{EVRD}
+Requires:	%{drmlibname} = %{EVRD}
 Provides:	%{name}-devel = %{EVRD}
 Obsoletes:	%mklibname -d %{name}_ 0
 Obsoletes:	%{bogusdevname} < %{EVRD}
@@ -69,6 +84,20 @@ completely written from scratch. FAAD 2 is licensed under the GPL.
 This package contains the static libraries needed to build programs
 with libfaad.
 
+%package -n	%{drmstatic}
+Summary:	DRM support for Freeware Advanced Audio Decoder static libraries
+Group:		Development/C++
+Requires:	%{static} = %{EVRD}
+
+%description -n %{drmstatic}
+FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
+completely written from scratch. FAAD 2 is licensed under the GPL.
+
+This package contains the static libraries needed to build programs
+with libfaad.
+
+This module adds DRM support.
+
 #package xmms
 #Group: Sound
 #Summary: AAC input plugin for xmms
@@ -80,7 +109,7 @@ with libfaad.
 
 %prep
 %setup -q
-dos2unix configure.in frontend/main.c common/mp4ff/mp4ffint.h common/mp4ff/Makefile.am
+dos2unix configure.ac frontend/main.c common/mp4ff/mp4ffint.h common/mp4ff/Makefile.am
 %apply_patches
 chmod 644 AUTHORS README TODO NEWS ChangeLog
 autoupdate
@@ -88,19 +117,15 @@ autoreconf -fiv
 
 %build
 %global optflags %{optflags} -Ofast
-%configure2_5x	--enable-static \
+%configure	--enable-static \
 		--with-drm
 %make
 
 %install
 %makeinstall_std
 install -m644 common/mp4ff/libmp4ff.a %{buildroot}%{_libdir}
-install -m644 common/mp4ff/{mp4ff.h,mp4ff_int_types.h} %{buildroot}%{_includedir}
+install -m644 common/mp4ff/mp4ff.h %{buildroot}%{_includedir}
  
-#gw rename it to a more standard name
-mkdir -p %{buildroot}%{_mandir}/man1
-mv %{buildroot}%{_mandir}/manm/faad.man %{buildroot}%{_mandir}/man1/faad.1
-
 %files
 %doc README NEWS TODO AUTHORS ChangeLog
 %{_bindir}/faad
@@ -109,10 +134,17 @@ mv %{buildroot}%{_mandir}/manm/faad.man %{buildroot}%{_mandir}/man1/faad.1
 %files -n %{libname}
 %{_libdir}/libfaad.so.%{major}*
 
+%files -n %{drmlibname}
+%{_libdir}/libfaad_drm.so.%{major}*
+
 %files -n %{devname}
 %{_libdir}/libfaad.so
+%{_libdir}/libfaad_drm.so
 %{_includedir}/*
 
 %files -n %{static}
 %{_libdir}/libfaad.a
 %{_libdir}/libmp4ff.a
+
+%files -n %{drmstatic}
+%{_libdir}/libfaad_drm.a

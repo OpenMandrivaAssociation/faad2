@@ -1,11 +1,12 @@
---- faad2-2.7/common/mp4ff/Makefile.am.fpic	2009-02-06 15:24:21.000000000 +0100
-+++ faad2-2.7/common/mp4ff/Makefile.am	2012-01-11 12:32:58.415771685 +0100
+diff -up faad2-2.8.8/common/mp4ff/Makefile.am.0001~ faad2-2.8.8/common/mp4ff/Makefile.am
+--- faad2-2.8.8/common/mp4ff/Makefile.am.0001~	2019-01-08 17:24:43.462001840 +0100
++++ faad2-2.8.8/common/mp4ff/Makefile.am	2019-01-08 17:25:03.711319688 +0100
 @@ -1,7 +1,7 @@
- lib_LIBRARIES = libmp4ff.a
- include_HEADERS = mp4ff.h mp4ffint.h
+ noinst_LIBRARIES = libmp4ff.a
+ noinst_HEADERS = mp4ff.h mp4ffint.h
  
 -libmp4ff_a_CFLAGS = -DUSE_TAGGING=1
 +libmp4ff_a_CFLAGS = -DUSE_TAGGING=1 -fPIC
  
  libmp4ff_a_SOURCES = mp4ff.c mp4atom.c mp4meta.c mp4sample.c mp4util.c \
- 		     mp4tagupdate.c mp4ff.h mp4ffint.h mp4ff_int_types.h
+ 		     mp4tagupdate.c mp4ff.h mp4ffint.h
