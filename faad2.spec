@@ -8,11 +8,13 @@
 %define drmstatic %mklibname -s -d faad_drm
 %define bogusstatic %mklibname -s -d %{name}
 
+%define		underver 2_9_1
+
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
-Version:	2.8.8
+Version:	2.9.1
 Release:	1
-Source0:	https://netcologne.dl.sourceforge.net/project/faac/faad2-src/faad2-2.8.0/faad2-%{version}.tar.gz
+Source0:	https://github.com/knik0/faad2/archive/%{underver}/%{name}-%{underver}.tar.gz
 Patch1:		faad2-2.7-mp4ff-fpic.patch
 URL:		http://www.audiocoding.com
 License:	GPLv2+
