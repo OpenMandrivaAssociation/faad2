@@ -111,20 +111,16 @@ This module adds DRM support.
 
 %prep
 %setup -q -n %{name}-%{underver}
-dos2unix configure.ac frontend/main.c common/mp4ff/mp4ffint.h common/mp4ff/Makefile.am
 %autopatch -p1
-chmod 644 AUTHORS README TODO NEWS ChangeLog
-autoupdate
-autoreconf -fiv
-
 %build
+autoreconf -vfi
 %global optflags %{optflags} -Ofast
 %configure	--enable-static \
 		--with-drm
-%make_build
 
 %install
 %make_install
+
 install -m644 common/mp4ff/libmp4ff.a %{buildroot}%{_libdir}
 install -m644 common/mp4ff/mp4ff.h %{buildroot}%{_includedir}
  
