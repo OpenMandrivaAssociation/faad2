@@ -120,12 +120,6 @@ autoreconf -vfi
 
 %install
 %make_install
-rm -rf %{buildroot}
-# Hack to work around a problem with DESTDIR in libtool 1.4.x
-LIBRARY_PATH="%{buildroot}/usr/lib:${LIBRARY_PATH}" make install DESTDIR=%{buildroot}
-# install libmp4ff
-install -m644 common/mp4ff/libmp4ff.a %{buildroot}%{_libdir}
-install -m644 common/mp4ff/mp4ff.h %{buildroot}%{_includedir}
  
 %files
 %doc README NEWS TODO AUTHORS ChangeLog
