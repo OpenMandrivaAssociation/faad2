@@ -110,9 +110,9 @@ This module adds DRM support.
 #.aac extension.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{underver}
 dos2unix configure.ac frontend/main.c common/mp4ff/mp4ffint.h common/mp4ff/Makefile.am
-%apply_patches
+%autopatch -p1
 chmod 644 AUTHORS README TODO NEWS ChangeLog
 autoupdate
 autoreconf -fiv
@@ -121,10 +121,10 @@ autoreconf -fiv
 %global optflags %{optflags} -Ofast
 %configure	--enable-static \
 		--with-drm
-%make
+%make_build
 
 %install
-%makeinstall_std
+%make_install
 install -m644 common/mp4ff/libmp4ff.a %{buildroot}%{_libdir}
 install -m644 common/mp4ff/mp4ff.h %{buildroot}%{_includedir}
  
