@@ -139,7 +139,6 @@ autoreconf -vfi
 
 %files -n %{static}
 %{_libdir}/libfaad.a
-%{_libdir}/libmp4ff.a
 
 %files -n %{drmstatic}
 %{_libdir}/libfaad_drm.a
