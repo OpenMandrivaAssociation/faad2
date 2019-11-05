@@ -8,12 +8,14 @@
 %define drmstatic %mklibname -s -d faad_drm
 %define bogusstatic %mklibname -s -d %{name}
 
+%define		underver 2_9_1
+
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
-Version:	2.8.8
+Version:	2.9.1
 Release:	1
-Source0:	https://netcologne.dl.sourceforge.net/project/faac/faad2-src/faad2-2.8.0/faad2-%{version}.tar.gz
-Patch1:		faad2-2.7-mp4ff-fpic.patch
+Source0:	https://github.com/knik0/faad2/archive/%{underver}/%{name}-%{underver}.tar.gz
+#Patch1:		faad2-2.7-mp4ff-fpic.patch
 URL:		http://www.audiocoding.com
 License:	GPLv2+
 Group:		Sound
@@ -108,23 +110,16 @@ This module adds DRM support.
 #.aac extension.
 
 %prep
-%setup -q
-dos2unix configure.ac frontend/main.c common/mp4ff/mp4ffint.h common/mp4ff/Makefile.am
-%apply_patches
-chmod 644 AUTHORS README TODO NEWS ChangeLog
-autoupdate
-autoreconf -fiv
-
+%setup -q -n %{name}-%{underver}
+%autopatch -p1
 %build
+autoreconf -vfi
 %global optflags %{optflags} -Ofast
 %configure	--enable-static \
 		--with-drm
-%make
 
 %install
-%makeinstall_std
-install -m644 common/mp4ff/libmp4ff.a %{buildroot}%{_libdir}
-install -m644 common/mp4ff/mp4ff.h %{buildroot}%{_includedir}
+%make_install
  
 %files
 %doc README NEWS TODO AUTHORS ChangeLog
@@ -144,7 +139,6 @@ install -m644 common/mp4ff/mp4ff.h %{buildroot}%{_includedir}
 
 %files -n %{static}
 %{_libdir}/libfaad.a
-%{_libdir}/libmp4ff.a
 
 %files -n %{drmstatic}
 %{_libdir}/libfaad_drm.a
