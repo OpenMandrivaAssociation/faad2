@@ -135,6 +135,7 @@ autoreconf -vfi
 %files -n %{devname}
 %{_libdir}/libfaad.so
 %{_libdir}/libfaad_drm.so
+%{_libdir}/pkgconfig/faad2.pc
 %{_includedir}/*
 
 %files -n %{static}
