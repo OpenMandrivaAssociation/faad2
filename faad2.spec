@@ -8,12 +8,22 @@
 %define drmstatic %mklibname -s -d faad_drm
 %define bogusstatic %mklibname -s -d %{name}
 
-%define		underver 2_9_2
+# faad is used by ffmpeg, ffmpeg is used by wine
+%ifarch %{x86_64}
+%bcond_without compat32
+%else
+%bcond_with compat32
+%endif
+%define lib32name libfaad%{major}
+%define drmlib32name libfaad_drm%{major}
+%define dev32name libfaad-devel
+
+%define		underver %(echo %{version} |sed -e 's,\\.,_,g')
 
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
 Version:	2.9.2
-Release:	1
+Release:	2
 Source0:	https://github.com/knik0/faad2/archive/%{underver}/%{name}-%{underver}.tar.gz
 #Patch1:		faad2-2.7-mp4ff-fpic.patch
 URL:		http://www.audiocoding.com
@@ -109,17 +119,76 @@ This module adds DRM support.
 #This is an AAC input plugin for xmms. AAC files are recognized by an
 #.aac extension.
 
+%if %{with compat32}
+%package -n	%{lib32name}
+Summary:	Freeware Advanced Audio Decoder shared library (32-bit)
+Group:		System/Libraries
+
+%description -n	%{lib32name}
+FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
+completely written from scratch. FAAD 2 is licensed under the GPL.
+
+This package contains the shared library needed by programs linked to
+libfaad.
+
+%package -n	%{drmlib32name}
+Summary:	DRM support for the Freeware Advanced Audio Decoder shared library (32-bit)
+Group:		System/Libraries
+
+%description -n	%{drmlib32name}
+FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
+completely written from scratch. FAAD 2 is licensed under the GPL.
+
+This package contains the shared library needed by programs linked to
+libfaad.
+
+This module adds DRM support.
+
+%package -n	%{dev32name}
+Summary:	Freeware Advanced Audio Decoder development files (32-bit)
+Group:		Development/C++
+Requires:	%{lib32name} = %{EVRD}
+Requires:	%{drmlib32name} = %{EVRD}
+Requires:	%{devname} = %{EVRD}
+
+%description -n %{dev32name}
+FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
+completely written from scratch. FAAD 2 is licensed under the GPL.
+
+This package contains the C++ headers needed to build programs with
+libfaad.
+%endif
+
 %prep
-%setup -q -n %{name}-%{underver}
-%autopatch -p1
-%build
+%autosetup -p1 -n %{name}-%{underver}
 autoreconf -vfi
+
+export CONFIGURE_TOP="$(pwd)"
 %global optflags %{optflags} -Ofast
+
+%if %{with compat32}
+mkdir build32
+cd build32
+%configure32	--with-drm
+cd ..
+%endif
+
+mkdir build
+cd build
 %configure	--enable-static \
 		--with-drm
 
+%build
+%if %{with compat32}
+%make_build -C build32
+%endif
+%make_build -C build
+
 %install
-%make_install
+%if %{with compat32}
+%make_install -C build32
+%endif
+%make_install -C build
  
 %files
 %doc README NEWS TODO AUTHORS ChangeLog
@@ -143,3 +212,16 @@ autoreconf -vfi
 
 %files -n %{drmstatic}
 %{_libdir}/libfaad_drm.a
+
+%if %{with compat32}
+%files -n %{lib32name}
+%{_prefix}/lib/libfaad.so.%{major}*
+
+%files -n %{drmlib32name}
+%{_prefix}/lib/libfaad_drm.so.%{major}*
+
+%files -n %{dev32name}
+%{_prefix}/lib/libfaad.so
+%{_prefix}/lib/libfaad_drm.so
+%{_prefix}/lib/pkgconfig/faad2.pc
+%endif
