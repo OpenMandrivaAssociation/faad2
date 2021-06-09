@@ -1,10 +1,10 @@
-%define	major	2
-%define	libname	%mklibname faad %{major}
+%define major 2
+%define libname %mklibname faad %{major}
 %define boguslibname %mklibname %{name}_ %{major}
 %define drmlibname %mklibname faad_drm %{major}
-%define	devname	%mklibname -d faad
+%define devname %mklibname -d faad
 %define bogusdevname %mklibname -d %{name}
-%define	static	%mklibname -s -d faad
+%define static %mklibname -s -d faad
 %define drmstatic %mklibname -s -d faad_drm
 %define bogusstatic %mklibname -s -d %{name}
 
@@ -22,8 +22,9 @@
 
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
+Epoch:		1
 Version:	2.10.0
-Release:	1
+Release:	2
 Source0:	https://github.com/knik0/faad2/archive/%{underver}/%{name}-%{underver}.tar.gz
 
 URL:		http://www.audiocoding.com
@@ -34,29 +35,28 @@ BuildRequires:	pkgconfig(sndfile)
 BuildRequires:	id3lib-devel
 BuildRequires:	dos2unix
 BuildRequires:	pkgconfig(sdl)
-Epoch:		1
 
 %description
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
 
-%package -n	%{libname}
+%package -n %{libname}
 Summary:	Freeware Advanced Audio Decoder shared library
 Group:		System/Libraries
 Obsoletes:	%{boguslibname} < %{EVRD}
 
-%description -n	%{libname}
+%description -n %{libname}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
 
 This package contains the shared library needed by programs linked to
 libfaad.
 
-%package -n	%{drmlibname}
+%package -n %{drmlibname}
 Summary:	DRM support for the Freeware Advanced Audio Decoder shared library
 Group:		System/Libraries
 
-%description -n	%{drmlibname}
+%description -n %{drmlibname}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
 
@@ -65,7 +65,7 @@ libfaad.
 
 This module adds DRM support.
 
-%package -n	%{devname}
+%package -n %{devname}
 Summary:	Freeware Advanced Audio Decoder development files
 Group:		Development/C++
 Requires:	%{libname} = %{EVRD}
@@ -81,7 +81,7 @@ completely written from scratch. FAAD 2 is licensed under the GPL.
 This package contains the C++ headers needed to build programs with
 libfaad.
 
-%package -n	%{static}
+%package -n %{static}
 Summary:	Freeware Advanced Audio Decoder static libraries
 Group:		Development/C++
 Requires:	%{devname} = %{EVRD}
@@ -96,7 +96,7 @@ completely written from scratch. FAAD 2 is licensed under the GPL.
 This package contains the static libraries needed to build programs
 with libfaad.
 
-%package -n	%{drmstatic}
+%package -n %{drmstatic}
 Summary:	DRM support for Freeware Advanced Audio Decoder static libraries
 Group:		Development/C++
 Requires:	%{static} = %{EVRD}
@@ -120,22 +120,22 @@ This module adds DRM support.
 #.aac extension.
 
 %if %{with compat32}
-%package -n	%{lib32name}
+%package -n %{lib32name}
 Summary:	Freeware Advanced Audio Decoder shared library (32-bit)
 Group:		System/Libraries
 
-%description -n	%{lib32name}
+%description -n %{lib32name}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
 
 This package contains the shared library needed by programs linked to
 libfaad.
 
-%package -n	%{drmlib32name}
+%package -n %{drmlib32name}
 Summary:	DRM support for the Freeware Advanced Audio Decoder shared library (32-bit)
 Group:		System/Libraries
 
-%description -n	%{drmlib32name}
+%description -n %{drmlib32name}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
 
@@ -144,7 +144,7 @@ libfaad.
 
 This module adds DRM support.
 
-%package -n	%{dev32name}
+%package -n %{dev32name}
 Summary:	Freeware Advanced Audio Decoder development files (32-bit)
 Group:		Development/C++
 Requires:	%{lib32name} = %{EVRD}
@@ -164,19 +164,20 @@ libfaad.
 autoreconf -vfi
 
 export CONFIGURE_TOP="$(pwd)"
-%global optflags %{optflags} -Ofast
+%global optflags %{optflags} -O3
 
 %if %{with compat32}
 mkdir build32
 cd build32
-%configure32	--with-drm
+%configure32 --with-drm
 cd ..
 %endif
 
 mkdir build
 cd build
-%configure	--enable-static \
-		--with-drm
+%configure \
+	--enable-static \
+	--with-drm
 
 %build
 %if %{with compat32}
