@@ -35,6 +35,9 @@ BuildRequires:	pkgconfig(sndfile)
 BuildRequires:	id3lib-devel
 BuildRequires:	dos2unix
 BuildRequires:	pkgconfig(sdl)
+%if %{with compat32}
+BuildRequires:	libc6
+%endif
 
 %description
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
