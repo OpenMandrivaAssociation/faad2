@@ -25,7 +25,7 @@ Name:		faad2
 Epoch:		1
 Version:	2.10.1
 Release:	1
-Source0:	https://github.com/knik0/faad2/archive/%{underver}/%{name}-%{underver}.tar.gz
+Source0:	https://github.com/knik0/faad2/archive/%{version}/%{name}-%{version}.tar.gz
 
 URL:		http://www.audiocoding.com
 License:	GPLv2+
@@ -160,7 +160,7 @@ libfaad.
 %endif
 
 %prep
-%autosetup -p1 -n %{name}-%{underver}
+%autosetup -p1 -n %{name}-%{version}
 autoreconf -vfi
 
 export CONFIGURE_TOP="$(pwd)"
