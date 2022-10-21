@@ -23,8 +23,8 @@
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
 Epoch:		1
-Version:	2.10.0
-Release:	2
+Version:	2.10.1
+Release:	1
 Source0:	https://github.com/knik0/faad2/archive/%{underver}/%{name}-%{underver}.tar.gz
 
 URL:		http://www.audiocoding.com
