@@ -23,9 +23,9 @@
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
 Epoch:		1
-Version:	2.10.0
+Version:	2.10.1
 Release:	2
-Source0:	https://github.com/knik0/faad2/archive/%{underver}/%{name}-%{underver}.tar.gz
+Source0:	https://github.com/knik0/faad2/archive/refs/tags/%{version}.tar.gz
 
 URL:		http://www.audiocoding.com
 License:	GPLv2+
@@ -160,7 +160,7 @@ libfaad.
 %endif
 
 %prep
-%autosetup -p1 -n %{name}-%{underver}
+%autosetup -p1
 autoreconf -vfi
 
 export CONFIGURE_TOP="$(pwd)"
@@ -181,14 +181,18 @@ cd build
 
 %build
 %if %{with compat32}
+ln -sf ../build32/include/faad.h include/faad.h
 %make_build -C build32
 %endif
+ln -sf ../build/include/faad.h include/faad.h
 %make_build -C build
 
 %install
 %if %{with compat32}
+ln -sf ../build32/include/faad.h include/faad.h
 %make_install -C build32
 %endif
+ln -sf ../build/include/faad.h include/faad.h
 %make_install -C build
  
 %files
