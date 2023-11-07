@@ -23,9 +23,10 @@
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
 Epoch:		1
-Version:	2.10.1
-Release:	2
+Version:	2.11.0
+Release:	1
 Source0:	https://github.com/knik0/faad2/archive/refs/tags/%{version}.tar.gz
+Patch0:		faad2-drop-lrintf-redefinition.patch
 
 URL:		http://www.audiocoding.com
 License:	GPLv2+
@@ -35,6 +36,7 @@ BuildRequires:	pkgconfig(sndfile)
 BuildRequires:	id3lib-devel
 BuildRequires:	dos2unix
 BuildRequires:	pkgconfig(sdl)
+BuildRequires:	cmake ninja
 %if %{with compat32}
 BuildRequires:	libc6
 %endif
@@ -113,15 +115,6 @@ with libfaad.
 
 This module adds DRM support.
 
-#package xmms
-#Group: Sound
-#Summary: AAC input plugin for xmms
-#Requires: xmms
-
-#description xmms
-#This is an AAC input plugin for xmms. AAC files are recognized by an
-#.aac extension.
-
 %if %{with compat32}
 %package -n %{lib32name}
 Summary:	Freeware Advanced Audio Decoder shared library (32-bit)
@@ -164,44 +157,46 @@ libfaad.
 
 %prep
 %autosetup -p1
-autoreconf -vfi
 
-export CONFIGURE_TOP="$(pwd)"
 %global optflags %{optflags} -O3
 
 %if %{with compat32}
-mkdir build32
-cd build32
-%configure32 --with-drm
+%cmake32 \
+	-G Ninja
 cd ..
 %endif
 
-mkdir build
-cd build
-%configure \
-	--enable-static \
-	--with-drm
+%cmake \
+	-G Ninja
+cd ..
+
+export CMAKE_BUILD_DIR=build-static
+%cmake \
+	-DBUILD_SHARED_LIBS:BOOL=OFF \
+	-DBUILD_STATIC_LIBS:BOOL=ON \
+	-G Ninja
 
 %build
 %if %{with compat32}
-ln -sf ../build32/include/faad.h include/faad.h
-%make_build -C build32
+#ln -sf ../build32/include/faad.h include/faad.h
+%ninja_build -C build32
 %endif
-ln -sf ../build/include/faad.h include/faad.h
-%make_build -C build
+#ln -sf ../build/include/faad.h include/faad.h
+%ninja_build -C build
+%ninja_build -C build-static
 
 %install
 %if %{with compat32}
-ln -sf ../build32/include/faad.h include/faad.h
-%make_install -C build32
+#ln -sf ../build32/include/faad.h include/faad.h
+%ninja_install -C build32
 %endif
-ln -sf ../build/include/faad.h include/faad.h
-%make_install -C build
+#ln -sf ../build/include/faad.h include/faad.h
+%ninja_install -C build-static
+%ninja_install -C build
  
 %files
-%doc README NEWS TODO AUTHORS ChangeLog
+%doc README AUTHORS ChangeLog
 %{_bindir}/faad
-%{_mandir}/man1/faad.1*
 
 %files -n %{libname}
 %{_libdir}/libfaad.so.%{major}*
