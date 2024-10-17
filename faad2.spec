@@ -28,7 +28,7 @@ Release:	1
 Source0:	https://github.com/knik0/faad2/archive/refs/tags/%{version}.tar.gz
 #Patch0:		faad2-drop-lrintf-redefinition.patch
 
-URL:		http://www.audiocoding.com
+URL:		https://www.audiocoding.com
 License:	GPLv2+
 Group:		Sound
 BuildRequires:	pkgconfig(sndfile)
