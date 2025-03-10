@@ -23,9 +23,9 @@
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:		faad2
 Epoch:		1
-Version:	2.11.1
+Version:	2.11.2
 Release:	1
-Source0:	https://github.com/knik0/faad2/archive/refs/tags/%{version}.tar.gz
+Source0:	https://github.com/knik0/faad2/archive/%{version}/%{name}-%{version}.tar.gz
 #Patch0:		faad2-drop-lrintf-redefinition.patch
 
 URL:		https://www.audiocoding.com
