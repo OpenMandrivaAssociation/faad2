@@ -21,29 +21,36 @@
 %define		underver %(echo %{version} |sed -e 's,\\.,_,g')
 
 Summary:	Freeware Advanced Audio Decoder version 2
-Name:		faad2
-Epoch:		1
+Name:	faad2
+Epoch:	1
 Version:	2.11.2
-Release:	1
-Source0:	https://github.com/knik0/faad2/archive/%{version}/%{name}-%{version}.tar.gz
-#Patch0:		faad2-drop-lrintf-redefinition.patch
-
-URL:		https://www.audiocoding.com
+Release:	2
 License:	GPLv2+
-Group:		Sound
-BuildRequires:	pkgconfig(sndfile)
-#BuildRequires: libxmms-devel
-BuildRequires:	id3lib-devel
+Group:	Sound
+Url:		https://www.audiocoding.com
+Source0:	https://github.com/knik0/faad2/archive/%{version}/%{name}-%{version}.tar.gz
+Patch0:	faad2-2.11.2-fix-warnings.patch
+Patch1:	faad2-2.11.2-avoid-heap-buffer-owerflow.patch
+BuildRequires:	cmake
 BuildRequires:	dos2unix
-BuildRequires:	pkgconfig(sdl)
-BuildRequires:	cmake ninja
+BuildRequires:	ninja
 %if %{with compat32}
 BuildRequires:	libc6
 %endif
+BuildRequires:	id3lib-devel
+BuildRequires:	pkgconfig(sdl)
+BuildRequires:	pkgconfig(sndfile)
 
 %description
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
+
+%files
+%doc README AUTHORS ChangeLog
+%{_bindir}/faad
+%{_mandir}/man1/faad.1*
+
+#-----------------------------------------------------------------------------
 
 %package -n %{libname}
 Summary:	Freeware Advanced Audio Decoder shared library
@@ -53,9 +60,13 @@ Obsoletes:	%{boguslibname} < %{EVRD}
 %description -n %{libname}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
-
 This package contains the shared library needed by programs linked to
 libfaad.
+
+%files -n %{libname}
+%{_libdir}/libfaad.so.%{major}*
+
+#-----------------------------------------------------------------------------
 
 %package -n %{drmlibname}
 Summary:	DRM support for the Freeware Advanced Audio Decoder shared library
@@ -64,11 +75,14 @@ Group:		System/Libraries
 %description -n %{drmlibname}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
-
 This package contains the shared library needed by programs linked to
 libfaad.
-
 This module adds DRM support.
+
+%files -n %{drmlibname}
+%{_libdir}/libfaad_drm.so.%{major}*
+
+#-----------------------------------------------------------------------------
 
 %package -n %{devname}
 Summary:	Freeware Advanced Audio Decoder development files
@@ -82,9 +96,16 @@ Obsoletes:	%{bogusdevname} < %{EVRD}
 %description -n %{devname}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
-
 This package contains the C++ headers needed to build programs with
 libfaad.
+
+%files -n %{devname}
+%{_libdir}/libfaad.so
+%{_libdir}/libfaad_drm.so
+%{_libdir}/pkgconfig/faad2.pc
+%{_includedir}/*
+
+#-----------------------------------------------------------------------------
 
 %package -n %{static}
 Summary:	Freeware Advanced Audio Decoder static libraries
@@ -97,9 +118,13 @@ Obsoletes:	%{bogusstatic} < %{EVRD}
 %description -n %{static}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
-
 This package contains the static libraries needed to build programs
 with libfaad.
+
+%files -n %{static}
+%{_libdir}/libfaad.a
+
+#-----------------------------------------------------------------------------
 
 %package -n %{drmstatic}
 Summary:	DRM support for Freeware Advanced Audio Decoder static libraries
@@ -109,11 +134,14 @@ Requires:	%{static} = %{EVRD}
 %description -n %{drmstatic}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
-
 This package contains the static libraries needed to build programs
 with libfaad.
-
 This module adds DRM support.
+
+%files -n %{drmstatic}
+%{_libdir}/libfaad_drm.a
+
+#-----------------------------------------------------------------------------
 
 %if %{with compat32}
 %package -n %{lib32name}
@@ -123,9 +151,13 @@ Group:		System/Libraries
 %description -n %{lib32name}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
-
 This package contains the shared library needed by programs linked to
 libfaad.
+
+%files -n %{lib32name}
+%{_prefix}/lib/libfaad.so.%{major}*
+
+#-----------------------------------------------------------------------------
 
 %package -n %{drmlib32name}
 Summary:	DRM support for the Freeware Advanced Audio Decoder shared library (32-bit)
@@ -134,11 +166,14 @@ Group:		System/Libraries
 %description -n %{drmlib32name}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
-
 This package contains the shared library needed by programs linked to
 libfaad.
-
 This module adds DRM support.
+
+%files -n %{drmlib32name}
+%{_prefix}/lib/libfaad_drm.so.%{major}*
+
+#-----------------------------------------------------------------------------
 
 %package -n %{dev32name}
 Summary:	Freeware Advanced Audio Decoder development files (32-bit)
@@ -150,10 +185,18 @@ Requires:	%{devname} = %{EVRD}
 %description -n %{dev32name}
 FAAD 2 is a LC, MAIN and LTP profile, MPEG2 and MPEG-4 AAC decoder,
 completely written from scratch. FAAD 2 is licensed under the GPL.
-
 This package contains the C++ headers needed to build programs with
 libfaad.
+
+%files -n %{dev32name}
+%{_prefix}/lib/libfaad.so
+%{_prefix}/lib/libfaad_drm.so
+%{_prefix}/lib/pkgconfig/faad2.pc
+
+# End of %%{with compat32}
 %endif
+
+#-----------------------------------------------------------------------------
 
 %prep
 %autosetup -p1
@@ -176,56 +219,25 @@ export CMAKE_BUILD_DIR=build-static
 	-DBUILD_STATIC_LIBS:BOOL=ON \
 	-G Ninja
 
+
 %build
 %if %{with compat32}
 #ln -sf ../build32/include/faad.h include/faad.h
 %ninja_build -C build32
 %endif
+
 #ln -sf ../build/include/faad.h include/faad.h
 %ninja_build -C build
 %ninja_build -C build-static
+
 
 %install
 %if %{with compat32}
 #ln -sf ../build32/include/faad.h include/faad.h
 %ninja_install -C build32
 %endif
+
 #ln -sf ../build/include/faad.h include/faad.h
 %ninja_install -C build-static
 %ninja_install -C build
  
-%files
-%doc README AUTHORS ChangeLog
-%{_bindir}/faad
-%{_mandir}/man1/faad.1*
-
-%files -n %{libname}
-%{_libdir}/libfaad.so.%{major}*
-
-%files -n %{drmlibname}
-%{_libdir}/libfaad_drm.so.%{major}*
-
-%files -n %{devname}
-%{_libdir}/libfaad.so
-%{_libdir}/libfaad_drm.so
-%{_libdir}/pkgconfig/faad2.pc
-%{_includedir}/*
-
-%files -n %{static}
-%{_libdir}/libfaad.a
-
-%files -n %{drmstatic}
-%{_libdir}/libfaad_drm.a
-
-%if %{with compat32}
-%files -n %{lib32name}
-%{_prefix}/lib/libfaad.so.%{major}*
-
-%files -n %{drmlib32name}
-%{_prefix}/lib/libfaad_drm.so.%{major}*
-
-%files -n %{dev32name}
-%{_prefix}/lib/libfaad.so
-%{_prefix}/lib/libfaad_drm.so
-%{_prefix}/lib/pkgconfig/faad2.pc
-%endif
