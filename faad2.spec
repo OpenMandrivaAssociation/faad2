@@ -23,14 +23,12 @@
 Summary:	Freeware Advanced Audio Decoder version 2
 Name:	faad2
 Epoch:	1
-Version:	2.11.2
-Release:	2
+Version:	2.11.3
+Release:	1
 License:	GPLv2+
 Group:	Sound
 Url:		https://www.audiocoding.com
 Source0:	https://github.com/knik0/faad2/archive/%{version}/%{name}-%{version}.tar.gz
-Patch0:	faad2-2.11.2-fix-warnings.patch
-Patch1:	faad2-2.11.2-avoid-heap-buffer-owerflow.patch
 BuildRequires:	cmake
 BuildRequires:	dos2unix
 BuildRequires:	ninja
